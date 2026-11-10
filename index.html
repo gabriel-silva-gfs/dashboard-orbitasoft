@@ -31,22 +31,25 @@
     body { background-color: #0d1117; color: #c9d1d9; font-family: system-ui, -apple-system, sans-serif; }
     .card-glow { border: 1px solid #30363d; background-color: #161b22; }
     .card-glow:hover { border-color: #58a6ff; transition: all 0.2s ease-in-out; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #0d1117; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
   </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-8 custom-scrollbar">
 
   <!-- HEADER -->
   <header class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-brand-border pb-5 gap-4">
     <div>
       <div class="flex items-center gap-3">
         <span class="inline-block w-3 h-3 rounded-full bg-blue-500 animate-pulse"></span>
-        <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Órbita Software — Dashboard FP&A</h1>
+        <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Órbita Software — Control Tower FP&A</h1>
       </div>
       <p class="text-sm text-gray-400 mt-1">Análise de Fechamento & Desvios Orçamentários (Budget vs. Realizado) — 3º Trimestre 2026</p>
     </div>
     <div class="flex items-center gap-3">
-      <span class="text-xs bg-gray-800 text-gray-300 px-3 py-1.5 rounded-md border border-brand-border">Modelo: SaaS B2B</span>
-      <select id="periodFilter" onchange="togglePeriodView()" class="bg-brand-card text-white text-sm border border-brand-border rounded-md px-3 py-1.5 focus:outline-none focus:border-blue-500">
+      <span class="text-xs bg-gray-800 text-gray-300 px-3 py-1.5 rounded-md border border-brand-border font-medium">Modelo: SaaS B2B</span>
+      <select id="periodFilter" onchange="togglePeriodView()" class="bg-brand-card text-white text-sm border border-brand-border rounded-md px-3.5 py-2 focus:outline-none focus:border-blue-500 cursor-pointer font-semibold shadow-sm">
         <option value="3T">Acumulado 3T26 (Jul-Set)</option>
         <option value="SET">Visão Focada: Setembro 2026</option>
       </select>
@@ -60,7 +63,7 @@
       <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Receita Bruta</p>
       <h2 class="text-2xl font-extrabold text-white mt-1" id="kpiRec">R$ 2.343,85k</h2>
       <div class="flex items-center justify-between mt-3 text-xs">
-        <span class="text-gray-400">Orçado: <span id="kpiRecBudget">R$ 2.385,00k</span></span>
+        <span class="text-gray-400">Orçado: <span id="kpiRecBudget" class="text-gray-200">R$ 2.385,00k</span></span>
         <span class="text-red-400 font-semibold" id="kpiRecVar">-1,7%</span>
       </div>
     </div>
@@ -76,7 +79,7 @@
 
     <div class="card-glow rounded-xl p-5">
       <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Lucro Bruto</p>
-      <h2 class="text-2xl font-extrabold text-white mt-1" id="kpiLucroBruto">R$ 1.877,52k</h2>
+      <h2 class="text-2xl font-extrabold text-white mt-1" id="kpiLucroBruto">R$ 1.877,51k</h2>
       <div class="flex items-center justify-between mt-3 text-xs">
         <span class="text-gray-400">Margem: <span id="kpiMargemBruta" class="text-gray-200">84,9%</span></span>
         <span class="text-red-400 font-semibold" id="kpiLucroBrutoVar">-2,1%</span>
@@ -85,9 +88,9 @@
 
     <div class="card-glow rounded-xl p-5">
       <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">EBITDA Realizado</p>
-      <h2 class="text-2xl font-extrabold text-red-400 mt-1" id="kpiEbitda">-R$ 93,40k</h2>
+      <h2 class="text-2xl font-extrabold text-red-400 mt-1" id="kpiEbitda">-R$ 93,41k</h2>
       <div class="flex items-center justify-between mt-3 text-xs">
-        <span class="text-gray-400">Orçado: <span id="kpiEbitdaBudget">-R$ 89,35k</span></span>
+        <span class="text-gray-400">Orçado: <span id="kpiEbitdaBudget" class="text-gray-200">-R$ 89,35k</span></span>
         <span class="text-red-400 font-semibold" id="kpiEbitdaVar">-4,5%</span>
       </div>
     </div>
@@ -108,7 +111,7 @@
     <!-- CHART 1: EVOLUCAO MENSAL DO P&L -->
     <div class="card-glow rounded-xl p-5">
       <h3 class="text-base font-bold text-white mb-1">Evolução Mensal — Receita Bruta vs. EBITDA</h3>
-      <p class="text-xs text-gray-400 mb-4">Comparativo mês a mês do 3T26 demonstrando a queda acumulada em Setembro</p>
+      <p class="text-xs text-gray-400 mb-4">Comparativo mês a mês do 3T26 demonstrando o impacto em Setembro</p>
       <div class="h-64">
         <canvas id="chartTrend"></canvas>
       </div>
@@ -116,7 +119,7 @@
 
     <!-- CHART 2: WATERFALL BRIDGE DO EBITDA -->
     <div class="card-glow rounded-xl p-5">
-      <h3 class="text-base font-bold text-white mb-1">Ponte de Variação do EBITDA (Bridge Orçado vs Real)</h3>
+      <h3 class="text-base font-bold text-white mb-1" id="waterfallTitle">Ponte de Variação do EBITDA (Bridge Orçado vs Real 3T26)</h3>
       <p class="text-xs text-gray-400 mb-4">Detalhamento das alavancas operacionais e ofensores de resultado (R$ mil)</p>
       <div class="h-64">
         <canvas id="chartWaterfall"></canvas>
@@ -154,27 +157,14 @@
           Principais Ofensores & Achados
         </h3>
 
-        <div class="space-y-3 text-xs">
-          <div class="p-3 bg-red-950/40 border border-red-800/40 rounded-lg">
-            <span class="font-bold text-red-400">Churn de Key Accounts (Setembro)</span>
-            <p class="text-gray-300 mt-1">Cancelamento dos clientes CLI-012 (-R$ 40k) e CLI-083 (-R$ 14,2k), gerando um impacto negativo de R$ 54,2k em receita recorrente.</p>
-          </div>
-
-          <div class="p-3 bg-yellow-950/40 border border-yellow-800/40 rounded-lg">
-            <span class="font-bold text-yellow-400">Estouro em Marketing & Eventos</span>
-            <p class="text-gray-300 mt-1">Patrocínio do evento RH Conecta adiado de Agosto para Setembro com overspend (+R$ 10k sobre orçamento de R$ 60k) + R$ 15k não previstos para montagem de estande.</p>
-          </div>
-
-          <div class="p-3 bg-emerald-950/40 border border-emerald-800/40 rounded-lg">
-            <span class="font-bold text-emerald-400">Saving em Pessoal vs. Fee de Vagas</span>
-            <p class="text-gray-300 mt-1">3 contratações represadas (1 Tech, 2 Vendas) geraram economia salarial de R$ 83,4k, mitigada por R$ 22k de taxa de recrutamento externa em Setembro.</p>
-          </div>
+        <div class="space-y-3 text-xs" id="ofensoresContainer">
+          <!-- Preenchido via JS conforme visão -->
         </div>
       </div>
 
       <div class="mt-4 pt-3 border-t border-brand-border">
         <span class="text-xs font-semibold text-gray-400">Recomendação FP&A:</span>
-        <p class="text-xs text-gray-300 mt-1">Implementar alerta de concentração de carteira para clientes > 5% do faturamento e estabelecer alçada de aprovação prévia para despesas de eventos com estande.</p>
+        <p class="text-xs text-gray-300 mt-1" id="recomendacaoText">Implementar alerta de concentração de carteira para clientes > 5% do faturamento e estabelecer alçada de aprovação prévia para despesas de eventos com estande.</p>
       </div>
     </div>
 
@@ -185,47 +175,85 @@
     const data3T = {
       recBruta: 'R$ 2.343,85k', recBrutaBud: 'R$ 2.385,00k', recBrutaVar: '-1,7%',
       recLiq: 'R$ 2.211,42k', recLiqVar: '-1,7%',
-      lucroBruto: 'R$ 1.877,52k', margemBruta: '84,9%', lucroBrutoVar: '-2,1%',
-      ebitda: '-R$ 93,40k', ebitdaBud: '-R$ 89,35k', ebitdaVar: '-4,5%',
+      lucroBruto: 'R$ 1.877,51k', margemBruta: '84,9%', lucroBrutoVar: '-2,1%',
+      ebitda: '-R$ 93,41k', ebitdaBud: '-R$ 89,35k', ebitdaVar: '-4,5%',
       headcount: '30 colab.',
+      waterfallTitle: 'Ponte de Variação do EBITDA (Bridge Orçado vs Real 3T26)',
+      waterfallLabels: ['EBITDA Orçado', 'Saving Pessoal', 'Perda L. Bruto', 'Estouro MKT', 'Outros Desvios', 'EBITDA Real'],
+      waterfallData: [-89.35, 60.74, -40.34, -23.58, -0.88, -93.41],
+      waterfallColors: ['#8b949e', '#238636', '#da3633', '#da3633', '#d29922', '#2f81f7'],
       dre: [
         { linha: 'Receita de Assinaturas (SaaS)', bud: 2295.00, real: 2250.85, var: -44.15, pct: '-1.9%' },
         { linha: 'Receita de Implantação', bud: 90.00, real: 93.00, var: 3.00, pct: '+3.3%' },
         { linha: 'Deduções sobre Receita (5.65%)', bud: -134.75, real: -132.43, var: 2.32, pct: '-1.7%' },
         { linha: 'Infraestrutura Cloud (COGS)', bud: -192.00, real: -193.76, var: -1.76, pct: '+0.9%' },
         { linha: 'Pessoal Suporte N1 (COGS)', bud: -140.40, real: -140.15, var: 0.25, pct: '-0.2%' },
-        { linha: 'Lucro Bruto', bud: 1917.85, real: 1877.52, var: -40.33, pct: '-2.1%', bold: true },
+        { linha: 'Lucro Bruto', bud: 1917.85, real: 1877.51, var: -40.34, pct: '-2.1%', bold: true },
         { linha: 'Despesas com Pessoal (OPEX)', bud: -1245.20, real: -1184.46, var: 60.74, pct: '-4.9%' },
         { linha: 'Marketing & Vendas (OPEX)', bud: -180.00, real: -203.58, var: -23.58, pct: '+13.1%' },
         { linha: 'Software e Licenças', bud: -84.00, real: -85.16, var: -1.16, pct: '+1.4%' },
         { linha: 'Ocupação (Aluguel e Condomínio)', bud: -114.00, real: -113.71, var: 0.29, pct: '-0.3%' },
         { linha: 'Serviços de Terceiros', bud: -354.00, real: -353.67, var: 0.33, pct: '-0.1%' },
         { linha: 'Viagens e Hospedagem', bud: -30.00, real: -30.34, var: -0.34, pct: '+1.1%' },
-        { linha: 'EBITDA', bud: -89.35, real: -93.40, var: -4.05, pct: '-4.5%', bold: true, highlight: true }
-      ]
+        { linha: 'EBITDA', bud: -89.35, real: -93.41, var: -4.06, pct: '-4.5%', bold: true, highlight: true }
+      ],
+      ofensores: `
+        <div class="p-3 bg-red-950/40 border border-red-800/40 rounded-lg">
+          <span class="font-bold text-red-400">Churn de Key Accounts (Setembro)</span>
+          <p class="text-gray-300 mt-1">Cancelamento do cliente CLI-012 (-R$ 40k pro-rata) e rescisão do CLI-083, gerando redução acumulada de R$ 44,15k na receita de assinaturas.</p>
+        </div>
+        <div class="p-3 bg-yellow-950/40 border border-yellow-800/40 rounded-lg">
+          <span class="font-bold text-yellow-400">Estouro em Marketing & Eventos</span>
+          <p class="text-gray-300 mt-1">Patrocínio do evento RH Conecta (+R$ 10k além do orçado) somado a R$ 15k não previstos para infraestrutura de estande em Setembro (+R$ 23,58k no 3T).</p>
+        </div>
+        <div class="p-3 bg-emerald-950/40 border border-emerald-800/40 rounded-lg">
+          <span class="font-bold text-emerald-400">Saving em Pessoal vs. Fee de Vagas</span>
+          <p class="text-gray-300 mt-1">3 contratações represadas geraram economia salarial acumulada de R$ 60,74k, amortizando parcialmente os estritos pontuais do trimestre.</p>
+        </div>
+      `,
+      recomendacao: "Implementar alerta de concentração de carteira para clientes > 5% do faturamento e estabelecer alçada de aprovação prévia para despesas não orçadas de eventos."
     };
 
     const dataSet = {
       recBruta: 'R$ 765,25k', recBrutaBud: 'R$ 810,00k', recBrutaVar: '-5,5%',
       recLiq: 'R$ 722,01k', recLiqVar: '-5,5%',
-      lucroBruto: 'R$ 609,73k', margemBruta: '84,4%', lucroBrutoVar: '-6,5%',
-      ebitda: '-R$ 221,58k', ebitdaBud: '-R$ 10,53k', ebitdaVar: '-100%+',
+      lucroBruto: 'R$ 609,72k', margemBruta: '84,5%', lucroBrutoVar: '-6,5%',
+      ebitda: '-R$ 221,60k', ebitdaBud: '-R$ 10,53k', ebitdaVar: '-2.004,5%',
       headcount: '30 colab.',
+      waterfallTitle: 'Ponte de Variação do EBITDA (Bridge Focada em Setembro 2026)',
+      waterfallLabels: ['EBITDA Orçado', 'Saving Pessoal', 'Perda L. Bruto', 'Estouro Terceiros', 'Estouro MKT', 'EBITDA Real'],
+      waterfallData: [-10.53, 18.19, -42.71, -100.02, -85.78, -221.60],
+      waterfallColors: ['#8b949e', '#238636', '#da3633', '#da3633', '#da3633', '#2f81f7'],
       dre: [
         { linha: 'Receita de Assinaturas (SaaS)', bud: 780.00, real: 733.75, var: -46.25, pct: '-5.9%' },
         { linha: 'Receita de Implantação', bud: 30.00, real: 31.50, var: 1.50, pct: '+5.0%' },
-        { linha: 'Deduções sobre Receita', bud: -45.77, real: -43.24, var: 2.53, pct: '-5.5%' },
-        { linha: 'Infraestrutura Cloud', bud: -65.00, real: -65.75, var: -0.75, pct: '+1.1%' },
-        { linha: 'Pessoal Suporte N1', bud: -46.80, real: -46.54, var: 0.26, pct: '-0.6%' },
-        { linha: 'Lucro Bruto', bud: 652.44, real: 609.73, var: -42.71, pct: '-6.5%', bold: true },
-        { linha: 'Despesas com Pessoal', bud: -428.96, real: -410.77, var: 18.19, pct: '-4.2%' },
-        { linha: 'Marketing & Vendas', bud: -40.00, real: -125.78, var: -85.78, pct: '+214.4%' },
+        { linha: 'Deduções sobre Receita (5.65%)', bud: -45.77, real: -43.24, var: 2.53, pct: '-5.5%' },
+        { linha: 'Infraestrutura Cloud (COGS)', bud: -65.00, real: -65.75, var: -0.75, pct: '+1.1%' },
+        { linha: 'Pessoal Suporte N1 (COGS)', bud: -46.80, real: -46.54, var: 0.26, pct: '-0.6%' },
+        { linha: 'Lucro Bruto', bud: 652.43, real: 609.72, var: -42.71, pct: '-6.5%', bold: true },
+        { linha: 'Despesas com Pessoal (OPEX)', bud: -428.96, real: -410.77, var: 18.19, pct: '-4.2%' },
+        { linha: 'Marketing & Vendas (OPEX)', bud: -40.00, real: -125.78, var: -85.78, pct: '+214.4%' },
         { linha: 'Software e Licenças', bud: -28.00, real: -28.36, var: -0.36, pct: '+1.3%' },
-        { linha: 'Ocupação', bud: -38.00, real: -37.90, var: 0.10, pct: '-0.3%' },
+        { linha: 'Ocupação (Aluguel e Condomínio)', bud: -38.00, real: -37.90, var: 0.10, pct: '-0.3%' },
         { linha: 'Serviços de Terceiros', bud: -118.00, real: -218.02, var: -100.02, pct: '+84.8%' },
         { linha: 'Viagens e Hospedagem', bud: -10.00, real: -10.49, var: -0.49, pct: '+4.9%' },
-        { linha: 'EBITDA', bud: -10.53, real: -221.58, var: -211.06, pct: '-100%+', bold: true, highlight: true }
-      ]
+        { linha: 'EBITDA', bud: -10.53, real: -221.60, var: -211.07, pct: '-2004.5%', bold: true, highlight: true }
+      ],
+      ofensores: `
+        <div class="p-3 bg-red-950/40 border border-red-800/40 rounded-lg">
+          <span class="font-bold text-red-400">Faturamento Duplo Terceirizado (Setembro)</span>
+          <p class="text-gray-300 mt-1">Lançamento acumulado do squad de dev Veltrix referente a Agosto e Setembro na mesma competência (NF 2291 - R$ 200k vs R$ 100k orçado), gerando desvio pontual de R$ 100,02k.</p>
+        </div>
+        <div class="p-3 bg-red-950/40 border border-red-800/40 rounded-lg">
+          <span class="font-bold text-red-400">Concentração de Evento RH Conecta</span>
+          <p class="text-gray-300 mt-1">Realocação do patrocínio (R$ 70k) + estande (R$ 15k) em Setembro, agravando as despesas de Marketing (+R$ 85,78k no mês).</p>
+        </div>
+        <div class="p-3 bg-yellow-950/40 border border-yellow-800/40 rounded-lg">
+          <span class="font-bold text-yellow-400">Impacto Direto de Churn SaaS</span>
+          <p class="text-gray-300 mt-1">Queda de R$ 46,25k em SaaS decorrente do encerramento de contrato CLI-012 em 10/09 e saída de contas de menor porte.</p>
+        </div>
+      `,
+      recomendacao: "Negociar cronograma de medição quinzenal com fornecedores de TI para evitar acúmulo de notas fiscais em competências futuras e reajustar régua de renovação contratual."
     };
 
     let chartTrend, chartWaterfall;
@@ -238,12 +266,14 @@
         if(row.bold) tr.className = "font-bold bg-gray-800/40 text-white";
         if(row.highlight) tr.className = "font-bold bg-red-950/30 text-red-300";
 
+        const formattedVar = row.var > 0 ? `+R$ ${row.var.toFixed(2)}k` : `R$ ${row.var.toFixed(2)}k`;
+
         tr.innerHTML = `
           <td class="py-2 px-3">${row.linha}</td>
-          <td class="py-2 px-3 text-right">R$ ${row.bud.toFixed(2)}k</td>
-          <td class="py-2 px-3 text-right">R$ ${row.real.toFixed(2)}k</td>
-          <td class="py-2 px-3 text-right ${row.var < 0 ? 'text-red-400' : 'text-emerald-400'}">R$ ${row.var.toFixed(2)}k</td>
-          <td class="py-2 px-3 text-right ${row.var < 0 ? 'text-red-400' : 'text-emerald-400'}">${row.pct}</td>
+          <td class="py-2 px-3 text-right font-mono">R$ ${row.bud.toFixed(2)}k</td>
+          <td class="py-2 px-3 text-right font-mono">R$ ${row.real.toFixed(2)}k</td>
+          <td class="py-2 px-3 text-right font-mono ${row.var < 0 ? 'text-red-400' : 'text-emerald-400'}">${formattedVar}</td>
+          <td class="py-2 px-3 text-right font-mono ${row.var < 0 ? 'text-red-400' : 'text-emerald-400'}">${row.pct}</td>
         `;
         tbody.appendChild(tr);
       });
@@ -259,7 +289,7 @@
           datasets: [
             { label: 'Receita Bruta Real (R$ k)', data: [781.90, 796.70, 765.25], borderColor: '#2f81f7', backgroundColor: 'rgba(47, 129, 247, 0.1)', fill: true, tension: 0.3 },
             { label: 'Receita Bruta Orçada (R$ k)', data: [780.00, 795.00, 810.00], borderColor: '#8b949e', borderDash: [5, 5], fill: false },
-            { label: 'EBITDA Realizado (R$ k)', data: [7.30, 120.88, -221.58], borderColor: '#da3633', backgroundColor: 'rgba(218, 54, 51, 0.1)', fill: false, tension: 0.3 }
+            { label: 'EBITDA Realizado (R$ k)', data: [7.30, 120.89, -221.60], borderColor: '#da3633', backgroundColor: 'rgba(218, 54, 51, 0.1)', fill: false, tension: 0.3 }
           ]
         },
         options: {
@@ -273,23 +303,16 @@
         }
       });
 
-      // CHART 2: WATERFALL EBITDA (3T)
+      // CHART 2: WATERFALL EBITDA
       const ctxWater = document.getElementById('chartWaterfall').getContext('2d');
       chartWaterfall = new Chart(ctxWater, {
         type: 'bar',
         data: {
-          labels: ['EBITDA Orçado', 'Saving Pessoal', 'Perda L. Bruto', 'Fee Recrutam.', 'Estouro MKT', 'EBITDA Real'],
+          labels: data3T.waterfallLabels,
           datasets: [{
             label: 'Impacto no EBITDA (R$ mil)',
-            data: [-89.35, 83.40, -40.33, -22.00, -25.00, -93.40],
-            backgroundColor: [
-              '#8b949e', // Orçado
-              '#238636', // Saving Pessoal
-              '#da3633', // Lucro Bruto Churn
-              '#d29922', // Recrutamento
-              '#da3633', // Evento Mkt
-              '#2f81f7'  // Realizado
-            ]
+            data: data3T.waterfallData,
+            backgroundColor: data3T.waterfallColors
           }]
         },
         options: {
@@ -308,6 +331,7 @@
       const val = document.getElementById('periodFilter').value;
       const data = val === '3T' ? data3T : dataSet;
 
+      // Updating KPI Cards
       document.getElementById('kpiRec').innerText = data.recBruta;
       document.getElementById('kpiRecBudget').innerText = data.recBrutaBud;
       document.getElementById('kpiRecVar').innerText = data.recBrutaVar;
@@ -323,12 +347,23 @@
       document.getElementById('kpiEbitdaBudget').innerText = data.ebitdaBud;
       document.getElementById('kpiEbitdaVar').innerText = data.ebitdaVar;
 
+      // Update Table & Insights
       renderDRETable(data.dre);
+      document.getElementById('ofensoresContainer').innerHTML = data.ofensores;
+      document.getElementById('recomendacaoText').innerText = data.recomendacao;
+
+      // Update Waterfall Chart dynamically
+      document.getElementById('waterfallTitle').innerText = data.waterfallTitle;
+      chartWaterfall.data.labels = data.waterfallLabels;
+      chartWaterfall.data.datasets[0].data = data.waterfallData;
+      chartWaterfall.data.datasets[0].backgroundColor = data.waterfallColors;
+      chartWaterfall.update();
     }
 
-    // Inicialização
+    // Initialization
     document.addEventListener('DOMContentLoaded', () => {
       renderDRETable(data3T.dre);
+      document.getElementById('ofensoresContainer').innerHTML = data3T.ofensores;
       initCharts();
     });
   </script>
